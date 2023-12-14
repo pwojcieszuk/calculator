@@ -1,5 +1,6 @@
 "use client";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
+import Button from "./Button";
 
 const validateInput = (expression: string) => {
   const isValid = /^[\d+\-*/. ()]+$/.test(expression);
@@ -23,6 +24,20 @@ const Calculator = () => {
       setInput(input + value);
     }
   };
+
+  const createButton = (
+    label: string,
+    variant: "number" | "operation" |  "reset"| "calculate",
+    wide = false,
+  ) => (
+    <Button
+      key={label}
+      label={label}
+      onClick={() => handleButtonClick(label)}
+      variant={variant}
+      wide={wide}
+    />
+  );
 
   const calculateResult = async () => {
     if (!validateInput(input)) {
@@ -53,34 +68,10 @@ const Calculator = () => {
     <div className="max-w-xs mx-auto mt-10 p-5 border-2 border-gray-300 rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold text-center text-gray-700 mb-4">Calculator</h1>
       <div className="grid grid-cols-4 gap-2 mb-4">
-        {numberButtons.map((button, idx) => (
-          <button
-            key={idx}
-            className={`bg-gray-200 text-black font-semibold py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-              button === "0" ? "col-span-2" : ""
-            }`}
-            onClick={() => handleButtonClick(button)}>
-            {button}
-          </button>
-        ))}
-        {operationButtons.map((button, idx) => (
-          <button
-            key={idx}
-            className="bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            onClick={() => handleButtonClick(button)}>
-            {button}
-          </button>
-        ))}
-        <button
-          className="bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-          onClick={() => handleButtonClick("C")}>
-          C
-        </button>
-        <button
-          className="bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-          onClick={() => handleButtonClick("=")}>
-          =
-        </button>
+        {numberButtons.map((label) => createButton(label, "number", label === "0"))}
+        {operationButtons.map((label) => createButton(label, "operation"))}
+        {createButton("C", 'reset', true)}
+        {createButton("=", 'calculate', true)}
       </div>
       <input
         type="text"
