@@ -1,6 +1,7 @@
 "use client";
 import { ChangeEvent, useState } from "react";
 import Button from "./Button";
+import ResizableTextarea from "./ResizableTextarea";
 
 const validateInput = (expression: string) => {
   const isValid = /^[\d+\-*/. ()]+$/.test(expression);
@@ -54,7 +55,7 @@ const Calculator = () => {
     }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     if (validateInput(value)) {
       setInput(value);
@@ -72,12 +73,12 @@ const Calculator = () => {
         {operationButtons.map((label) => createButton(label, "operation"))}
         {createButton("C", 'reset', true)}
         {createButton("=", 'calculate', true)}
-      </div>
-      <input
-        type="text"
+          </div>
+          <ResizableTextarea
         value={input}
         onChange={handleInputChange}
-        className="w-full p-2 border-2 border-gray-300 rounded mb-2 overflow-auto"
+        className="w-full p-2 border-2 border-gray-300 rounded mb-2 resize-none overflow-hidden"
+        style={{ minHeight: '50px' }}
       />
       <p className="text-red-500 text-sm min-h-[1.3rem]">{error}</p>
     </div>
