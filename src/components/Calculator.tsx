@@ -8,12 +8,31 @@ const validateInput = (expression: string) => {
   return isValid;
 };
 
+const numberButtons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  const operationButtons = ["+", "-", "*", "/", "."];
+
+const isOperation = (char: string): boolean => {
+    return operationButtons.includes(char);
+};
+  
+const handleInputLogic = (currentInput: string, newValue: string): string => {
+  if (currentInput.length === 0 && isOperation(newValue)) {
+    return currentInput;
+  }
+
+  if (isOperation(newValue) && isOperation(currentInput[currentInput.length - 1])) {
+    // Replace the last character if it is also an operation
+    return currentInput.slice(0, -1) + newValue;
+  } else {
+    return currentInput + newValue;
+  }
+};
+
 const Calculator = () => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
 
-  const numberButtons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-  const operationButtons = ["+", "-", "*", "/", "."];
+  
 
   const handleButtonClick = (value: string) => {
     if (value === "C") {
@@ -22,7 +41,7 @@ const Calculator = () => {
     } else if (value === "=") {
       calculateResult();
     } else {
-      setInput(input + value);
+      setInput(handleInputLogic(input, value));
     }
   };
 
