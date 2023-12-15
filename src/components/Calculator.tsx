@@ -2,6 +2,7 @@
 import { ChangeEvent, useState } from "react";
 import Button from "./Button";
 import ResizableTextarea from "./ResizableTextarea";
+import { calculateExpression } from "@/services/calculation";
 
 const validateInput = (expression: string) => {
   const isValid = /^[\d+\-*/. ()]+$/.test(expression);
@@ -32,12 +33,11 @@ const Calculator = () => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
 
-  
-
   const handleButtonClick = (value: string) => {
+    setError("");
     if (value === "C") {
       setInput("");
-      setError("");
+
     } else if (value === "=") {
       calculateResult();
     } else {
@@ -66,11 +66,11 @@ const Calculator = () => {
     }
 
     try {
-      const response = await Promise.resolve({ data: { result: 42 } }); // TODO: Replace with actual calculation
-      setInput(response.data.result.toString());
+      const response = await calculateExpression(input);
+      setInput(response.result.toString());
     } catch (error) {
       console.error("Error in calculation:", error);
-      setError("Error in calculation");
+      setError(error ? String(error) : "Error in calculation");
     }
   };
 
